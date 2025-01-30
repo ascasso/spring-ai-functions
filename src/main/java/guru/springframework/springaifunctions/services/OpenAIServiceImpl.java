@@ -1,6 +1,5 @@
 package guru.springframework.springaifunctions.services;
 
-
 import guru.springframework.springaifunctions.functions.StockQuoteFunction;
 import guru.springframework.springaifunctions.functions.WeatherServiceFunction;
 import guru.springframework.springaifunctions.model.*;
@@ -16,6 +15,7 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                         .description("Get the current stock price for a stock symbol")
                         .inputType(StockPriceRequest.class)
                         .responseConverter((response) -> {
-                            String schema = ModelOptionsUtils.getJsonSchema(StockPriceResponse.class, false);
+                            String schema = ModelOptionsUtils.getJsonSchema((Type) StockPriceResponse.class, false);
                             String json = ModelOptionsUtils.toJsonString(response);
                             return schema + "\n" + json;
                         })
