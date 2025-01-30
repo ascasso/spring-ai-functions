@@ -1,5 +1,6 @@
 package guru.springframework.springaifunctions.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import guru.springframework.springaifunctions.functions.StockQuoteFunction;
 import guru.springframework.springaifunctions.functions.WeatherServiceFunction;
 import guru.springframework.springaifunctions.model.*;
@@ -38,7 +39,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                         .description("Get the current stock price for a stock symbol")
                         .inputType(StockPriceRequest.class)
                         .responseConverter((response) -> {
-                            String schema = ModelOptionsUtils.getJsonSchema((Type) StockPriceResponse.class, false);
+                            String schema = ModelOptionsUtils.getJsonSchema(new TypeReference<StockPriceResponse>(){}.getType(), false);
                             String json = ModelOptionsUtils.toJsonString(response);
                             return schema + "\n" + json;
                         })
