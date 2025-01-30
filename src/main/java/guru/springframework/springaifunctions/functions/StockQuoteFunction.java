@@ -33,7 +33,7 @@ public class StockQuoteFunction implements Function<StockPriceRequest, StockPric
                 .retrieve().body(JsonNode.class);
 
         if (jsonNode.isEmpty()) {
-            return new StockPriceResponse(null, null, null, null, null );
+            return new StockPriceResponse(null, null, null, null, null, null );
         } else {
             return new ObjectMapper().convertValue(jsonNode, StockPriceResponse.class);
         }

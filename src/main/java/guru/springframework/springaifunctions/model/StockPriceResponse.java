@@ -19,5 +19,6 @@ public record StockPriceResponse(@JsonPropertyDescription("ticker symbol of stoc
                                  @JsonPropertyDescription("Company name") String name,
                                  @JsonPropertyDescription("Price of stock in USD") BigDecimal price,
                                  @JsonPropertyDescription("The exchange the stock is traded on") String exchange,
-                                 @JsonPropertyDescription("Epoch Time of quote") Integer updated) {
+                                 @JsonPropertyDescription("Epoch Time of quote") Integer updated,
+                                 @JsonPropertyDescription("Currency of the quote") String currency) {
 }

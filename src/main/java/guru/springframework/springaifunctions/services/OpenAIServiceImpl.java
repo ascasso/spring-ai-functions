@@ -3,10 +3,7 @@ package guru.springframework.springaifunctions.services;
 
 import guru.springframework.springaifunctions.functions.StockQuoteFunction;
 import guru.springframework.springaifunctions.functions.WeatherServiceFunction;
-import guru.springframework.springaifunctions.model.Answer;
-import guru.springframework.springaifunctions.model.Question;
-import guru.springframework.springaifunctions.model.StockPriceResponse;
-import guru.springframework.springaifunctions.model.WeatherResponse;
+import guru.springframework.springaifunctions.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -37,8 +34,9 @@ public class OpenAIServiceImpl implements OpenAIService {
     public Answer getStockPrice(Question question) {
         var promptOptions = OpenAiChatOptions.builder()
                 .functionCallbacks(List.of(FunctionCallback.builder()
-                                .function("CurrentStockPrice", new StockQuoteFunction(apiNinjasKey))
+                        .function("CurrentStockPrice", new StockQuoteFunction(apiNinjasKey))
                         .description("Get the current stock price for a stock symbol")
+                        .inputType(StockPriceRequest.class)
                         .responseConverter((response) -> {
                             String schema = ModelOptionsUtils.getJsonSchema(StockPriceResponse.class, false);
                             String json = ModelOptionsUtils.toJsonString(response);
