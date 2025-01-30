@@ -1,6 +1,5 @@
 package guru.springframework.springaifunctions.services;
 
-
 import guru.springframework.springaifunctions.functions.WeatherServiceFunction;
 import guru.springframework.springaifunctions.model.Answer;
 import guru.springframework.springaifunctions.model.Question;
@@ -22,6 +21,9 @@ import java.util.List;
 
 /**
  * Created by jt, Spring Framework Guru.
+ *
+ * Changes:
+ * 2025-01-30 AS: Added inputType, modified function parameters and prompt to use longitude and latitude.
  */
 @RequiredArgsConstructor
 @Service
@@ -37,7 +39,7 @@ public class OpenAIServiceImpl implements OpenAIService {
         var promptOptions = OpenAiChatOptions.builder()
                 .functionCallbacks(List.of(FunctionCallback.builder()
                         .function("CurrentWeather", new WeatherServiceFunction(apiNinjasKey))
-                        .description("Get the current weather for a location")
+                        .description("Get the current weather for a location expressed in longitude and latitude.")
                         .inputType(WeatherRequest.class)
                         .responseConverter(response -> {
                             String schema = ModelOptionsUtils.getJsonSchema(WeatherResponse.class, false);
@@ -49,8 +51,10 @@ public class OpenAIServiceImpl implements OpenAIService {
 
         Message userMessage = new PromptTemplate(question.question()).createMessage();
 
-        Message systemMessage = new SystemPromptTemplate("You are a weather service. You receive weather information from a service which gives you the information based on the metrics system." +
-                " When answering the weather in an imperial system country, you should convert the temperature to Fahrenheit and the wind speed to miles per hour. ").createMessage();
+        Message systemMessage = new SystemPromptTemplate("You are a weather service. You determine longitude and latitude from a location in the user prompt. " +
+                "You receive weather information from a service which expects the longitude and latitude you need to determine from the prompt. You give the information based on the metric system." +
+                "If you are unable to determine the longitude and latitude, say so.")
+                .createMessage();
 
         var response = openAiChatModel.call(new Prompt(List.of(userMessage, systemMessage), promptOptions));
 

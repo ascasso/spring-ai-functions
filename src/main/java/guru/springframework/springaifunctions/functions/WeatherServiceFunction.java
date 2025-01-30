@@ -8,6 +8,9 @@ import java.util.function.Function;
 
 /**
  * Created by jt, Spring Framework Guru.
+ *
+ * Changes:
+ * 2025-01-30 AS: Modified query parameters from location to longitude and latitude.
  */
 public class WeatherServiceFunction implements Function<WeatherRequest, WeatherResponse> {
 
@@ -32,14 +35,10 @@ public class WeatherServiceFunction implements Function<WeatherRequest, WeatherR
         return restClient.get().uri(uriBuilder -> {
             System.out.println("Building URI for weather request: " + weatherRequest);
 
-            uriBuilder.queryParam("city", weatherRequest.location());
+            uriBuilder.queryParam("lat", weatherRequest.latitude());
 
-            if (weatherRequest.state() != null && !weatherRequest.state().isBlank()) {
-                uriBuilder.queryParam("state", weatherRequest.state());
-            }
-            if (weatherRequest.country() != null && !weatherRequest.country().isBlank()) {
-                uriBuilder.queryParam("country", weatherRequest.country());
-            }
+            uriBuilder.queryParam("lon", weatherRequest.longitude());
+
             return uriBuilder.build();
         }).retrieve().body(WeatherResponse.class);
     }
